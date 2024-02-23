@@ -44,7 +44,7 @@ def main():
         print(f"Model saved to {filename}.")
 
 
-def load_data(data_dir):
+def load_data(data_dir) -> tuple[list[np.ndarray], list[int]]:
     """
     Load image data from directory `data_dir`.
 
@@ -58,8 +58,25 @@ def load_data(data_dir):
     be a list of integer labels, representing the categories for each of the
     corresponding `images`.
     """
-    raise NotImplementedError
 
+    images = []
+    labels = []
+    for label in range(NUM_CATEGORIES):
+        category_images = read_and_resize_images(os.path.join(data_dir, str(label)))
+        images.extend(category_images)
+        labels.extend([label] * len(category_images))
+
+    return images, labels
+
+def read_and_resize_images(data_dir) -> list[np.ndarray]:
+
+    images = []
+    for filename in os.listdir(data_dir):
+        img = cv2.imread(os.path.join(data_dir, filename))
+        img = cv2.resize(img, (IMG_WIDTH, IMG_HEIGHT))
+        images.append(img)
+
+    return images
 
 def get_model():
     """
