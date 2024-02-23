@@ -84,8 +84,37 @@ def get_model():
     `input_shape` of the first layer is `(IMG_WIDTH, IMG_HEIGHT, 3)`.
     The output layer should have `NUM_CATEGORIES` units, one for each category.
     """
-    raise NotImplementedError
+    # Keras is an api that different machine learning algorithms access.
+    # A sequential model is one where layers follow each other.
+    model = tf.keras.models.Sequential()
 
+    # Add a convolutional layer with 32 filters, each filter has a 3x3 kernel
+    model.add(tf.keras.layers.Conv2D(32, (3, 3), activation="relu", input_shape=(IMG_WIDTH, IMG_HEIGHT, 3)))
+
+    model.add(tf.keras.layers.Flatten())
+
+
+    # The number of layers and the types of layers you include in between are up to you.
+    # You may wish to experiment with:
+    #     different numbers of convolutional and pooling layers
+    #     different numbers and sizes of filters for convolutional layers
+    #     different pool sizes for pooling layers
+    #     different numbers and sizes of hidden layers
+    #     dropout layers to reduce overfitting
+
+    # Add output layer with NUM_CATEGORIES units,
+    # one for each of the traffic sign categories units
+    model.add(tf.keras.layers.Dense(NUM_CATEGORIES, activation="sigmoid"))
+
+
+    # Train neural network
+    model.compile(
+        optimizer="adam",
+        loss="categorical_crossentropy",
+        metrics=["accuracy"]
+    )
+
+    return model
 
 if __name__ == "__main__":
     main()
